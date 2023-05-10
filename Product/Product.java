@@ -2,7 +2,7 @@ package Product;
 
 public class Product {
     private String id;
-    private String name;
+    String name;
     private String category;
     private String description;
     private String image;
@@ -48,5 +48,10 @@ public class Product {
 
     public double getDiscount() {
         return discount;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s - %s (%s)", this.name, this.brand, this.category);
     }
 }

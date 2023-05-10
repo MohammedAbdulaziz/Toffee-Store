@@ -3,7 +3,7 @@ package Product;
 import java.util.List;
 
 public interface ProductRepository {
-    List<Product> findAll();
+    List<String> findAllFormatted();
 
     Product findById(String name);
 }

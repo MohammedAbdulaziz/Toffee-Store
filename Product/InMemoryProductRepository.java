@@ -25,8 +25,16 @@ public class InMemoryProductRepository implements ProductRepository {
         this.products.put("3", product3);
     }
 
-    public List<Product> findAll() {
-        return new ArrayList<>(this.products.values());
+    public List<String> findAllFormatted() {
+        List<String> formattedProducts = new ArrayList<>();
+        int i = 1;
+        for (Product product : this.products.values()) {
+            String formattedProduct = i + ". " + product.getName() + " - " + product.getBrand() + " (" +
+                    product.getCategory() + ")";
+            formattedProducts.add(formattedProduct);
+            i++;
+        }
+        return formattedProducts;
     }
 
     public Product findById(String id) {

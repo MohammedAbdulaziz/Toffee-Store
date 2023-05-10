@@ -1,11 +1,11 @@
-package User;
+// package User;
 
-public interface UserRepository {
-    boolean exists(String email);
+// public interface UserRepository {
+// boolean exists(String username);
 
-    void create(User user);
+// void create(User user);
 
-    void update(User user);
+// void update(User user);
 
-    User findByEmail(String email);
-}
+// User findByUsername(String username);
+// }

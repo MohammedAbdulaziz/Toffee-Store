@@ -9,8 +9,8 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<Product> getCatalog() {
-    return productRepository.findAll();
+  public List<String> getCatalog() {
+    return productRepository.findAllFormatted();
   }
 
   public Product getProductById(String id) {
