@@ -32,6 +32,7 @@ public class UserInput {
                             return;
                         }
                     }
+                    fileScanner.close();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -52,10 +53,7 @@ public class UserInput {
                 try {
                     File file = new File("users.txt");
                     Scanner fileScanner = new Scanner(file);
-                    if (!fileScanner.hasNextLine()) {
-                        System.out.println("User does not exist. Please register.");
-                        getUserInput();
-                    }
+                    boolean userExists = false;
                     while (fileScanner.hasNextLine()) {
                         String line = fileScanner.nextLine();
                         String[] parts = line.split(":");
@@ -64,18 +62,20 @@ public class UserInput {
 
                         if (username.equals(registeredUsername) && password.equals(registeredPassword)) {
                             System.out.println("Login successful.");
-                            return;
-                        } else if ((username.equals(registeredUsername) && !password.equals(registeredPassword))
-                                || (!username.equals(registeredUsername) && password.equals(registeredPassword))) {
+                            userExists = true;
+                            break;
+                        } else if ((username.equals(registeredUsername) && !password.equals(registeredPassword))) {
 
                             System.out.println("Incorrect username or password.");
                             getUserInput();
-                        } else {
-                            System.out.println("User does not exist. Please register.");
-                            getUserInput();
+                            fileScanner.close();
                         }
                     }
-
+                    if (!userExists) {
+                        System.out.println("User doesn't exist. Please register.");
+                        getUserInput();
+                    }
+                    fileScanner.close();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
