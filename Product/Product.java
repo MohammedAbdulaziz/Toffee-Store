@@ -49,9 +49,4 @@ public class Product {
     public double getDiscount() {
         return discount;
     }
-
-    @Override
-    public String toString() {
-        return String.format("%s - %s (%s)", this.name, this.brand, this.category);
-    }
 }

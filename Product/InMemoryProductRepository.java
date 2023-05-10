@@ -12,7 +12,7 @@ public class InMemoryProductRepository implements ProductRepository {
         this.products = new HashMap<>();
         // initialize some products
         Product product1 = new Product("1", "Candy", "Package",
-                "A sealed package full of different candies including hard candy and many other types.", "image1.jpg",
+                "A sealed package full of different candies including\n hard candy and many other types.", "image1.jpg",
                 "Hershi", 5.0,
                 3.0);
         Product product2 = new Product("2", "Chocolate", "Kilo", "Solidified Milk Chocolate sold in kilos",
@@ -30,7 +30,7 @@ public class InMemoryProductRepository implements ProductRepository {
         int i = 1;
         for (Product product : this.products.values()) {
             String formattedProduct = i + ". " + product.getName() + " - " + product.getBrand() + " (" +
-                    product.getCategory() + ")";
+                    product.getCategory() + ")\n  " + product.getDescription() + "\n  Price: " + product.getPrice();
             formattedProducts.add(formattedProduct);
             i++;
         }
