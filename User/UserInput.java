@@ -28,11 +28,9 @@ public class UserInput {
 
                         if (username.equals(registeredUsername)) {
                             System.out.println("Username already exists, please choose another one.");
-                            fileScanner.close();
                             getUserInput();
                             return;
                         }
-                        fileScanner.close();
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -46,7 +44,6 @@ public class UserInput {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Username is: " + user.getUsername() + "\nPassword is: " + user.getPassword());
             } else if (Integer.parseInt(choice) == 2) {
                 System.out.print("Enter username: ");
                 String username = myObj.next();
@@ -55,7 +52,10 @@ public class UserInput {
                 try {
                     File file = new File("users.txt");
                     Scanner fileScanner = new Scanner(file);
-
+                    if (!fileScanner.hasNextLine()) {
+                        System.out.println("User does not exist. Please register.");
+                        getUserInput();
+                    }
                     while (fileScanner.hasNextLine()) {
                         String line = fileScanner.nextLine();
                         String[] parts = line.split(":");
@@ -65,17 +65,20 @@ public class UserInput {
                         if (username.equals(registeredUsername) && password.equals(registeredPassword)) {
                             System.out.println("Login successful.");
                             return;
+                        } else if ((username.equals(registeredUsername) && !password.equals(registeredPassword))
+                                || (!username.equals(registeredUsername) && password.equals(registeredPassword))) {
+
+                            System.out.println("Incorrect username or password.");
+                            getUserInput();
+                        } else {
+                            System.out.println("User does not exist. Please register.");
+                            getUserInput();
                         }
-                        fileScanner.close();
                     }
 
-                    System.out.println("Incorrect username or password.");
-                    getUserInput();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                User user = new User(username, password);
-                System.out.println("Username is: " + user.getUsername() + "\nPassword is: " + user.getPassword());
             } else {
                 System.out.println("Invalid choice");
                 getUserInput();
