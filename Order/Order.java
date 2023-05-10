@@ -1,78 +1,59 @@
-// package Order;
 
-// import java.util.ArrayList;
-// import java.util.List;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
-// import User.User;
+import Product.InMemoryProductRepository;
+import Product.ProductService;
 
-// public class Order {
-// private String orderID;
-// private User user;
-// private List<OrderItem> items;
-// private OrderStatus status;
-// private String shippingAddress;
-// private PaymentMethod paymentMethod;
+public class Order {
+    private static final Map<String, Integer> cart = new HashMap<>();
 
-// public Order(String orderID, User user) {
-// this.orderID = orderID;
-// this.user = user;
-// this.items = new ArrayList<>();
-// this.status = OrderStatus.PENDING;
-// }
-
-// public void addItem(Product product, int quantity) {
-// OrderItem item = new OrderItem(product, quantity);
-// items.add(item);
-// }
-
-// public void removeItem(OrderItem item) {
-// items.remove(item);
-// }
-
-// public double calculateTotalPrice() {
-// double totalPrice = 0.0;
-// for (OrderItem item : items) {
-// double itemPrice = item.getProduct().getPrice();
-// double itemDiscount = item.getProduct().getDiscount();
-// int itemQuantity = item.getQuantity();
-// double itemTotalPrice = itemPrice * itemQuantity * (1 - itemDiscount);
-// totalPrice += itemTotalPrice;
-// }
-// return totalPrice;
-// }
-
-// public void updateShippingAddress(String shippingAddress) {
-// this.shippingAddress = shippingAddress;
-// }
-
-// public void selectPaymentMethod(PaymentMethod paymentMethod) {
-// this.paymentMethod = paymentMethod;
-// }
-
-// public void placeOrder() {
-// // validate order
-// if (shippingAddress == null || items.isEmpty()) {
-// throw new IllegalStateException("Order cannot be placed without a shipping
-// address and items.");
-// }
-
-// // select payment method
-// if (paymentMethod == null) {
-// throw new IllegalStateException("Payment method must be selected before
-// placing the order.");
-// }
-
-// // set status to processing
-// status = OrderStatus.PROCESSING;
-// }
-
-// public void closeOrder() {
-// if (status != OrderStatus.DELIVERED) {
-// throw new IllegalStateException("Order cannot be closed until it has been
-// delivered.");
-// }
-
-// // mark order as closed
-// status = OrderStatus.CLOSED;
-// }
-// }
+    public static void getOrderInput() {
+        Scanner productScanner = new Scanner(System.in);
+        ProductService productService = new ProductService(new InMemoryProductRepository());
+        List<String> products = productService.getCatalog();
+        System.out.println("Please select a product by entering its number:\n");
+        for (String product : products) {
+            System.out.println(product);
+        }
+        String productChoice = productScanner.next();
+        System.out.println("You have chosen: " + products.get(Integer.parseInt(productChoice) - 1).substring(3));
+        String[] parts = products.get(Integer.parseInt(productChoice) - 1).split("[()]");
+        String category = parts[1].trim();
+        System.out.println("Please enter the quantity in " + category + " you would like to purchase:");
+        String quantity = productScanner.next();
+        System.out.println("You have chosen to purchase " + quantity + " " + category + "s.");
+        if (cart.containsKey(products.get(Integer.parseInt(productChoice) - 1).substring(3))) {
+            int currentQuantity = cart.get(products.get(Integer.parseInt(productChoice) - 1).substring(3));
+            cart.put(products.get(Integer.parseInt(productChoice) - 1).substring(3),
+                    currentQuantity + Integer.parseInt(quantity));
+        } else {
+            cart.put(products.get(Integer.parseInt(productChoice) - 1).substring(3), Integer.parseInt(quantity));
+        }
+        System.out.println("Would you like to continue shopping? (Y/N)");
+        String continueShopping = productScanner.next();
+        if (continueShopping.equals("Y") || continueShopping.equals("y")) {
+            getOrderInput();
+            productScanner.close();
+            return;
+        } else if (continueShopping.equals("N") || continueShopping.equals("n")) {
+            System.out.println("Select payment method:\n1. Cash on Delivery \n2. Credit Card");
+            String paymentMethod = productScanner.next();
+            if (paymentMethod.equals("1")) {
+                System.out.println("You have chosen Cash on Delivery.");
+            } else if (paymentMethod.equals("2")) {
+                System.out.println("You have chosen Credit Card.");
+            }
+        }
+        System.out.println("Your cart contains:");
+        for (String product : cart.keySet()) {
+            int productQuantity = cart.get(product);
+            System.out.println(product + " x " + productQuantity);
+        }
+        System.out.println("Thank you for shopping with us!");
+        System.out.println("Order Delivered");
+        productScanner.close();
+    }
+}
