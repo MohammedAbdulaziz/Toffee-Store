@@ -7,11 +7,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void register(String email, String password, String address) throws UserRegistrationException {
-        if (userRepository.exists(email)) {
-            throw new UserRegistrationException("User with this email already exists");
+    public void register(String username, String password) throws UserRegistrationException {
+        if (userRepository.exists(username)) {
+            throw new UserRegistrationException();
         }
-        User user = new User(email, password, address);
+        User user = new User(username, password, );
         userRepository.create(user);
     }
 
