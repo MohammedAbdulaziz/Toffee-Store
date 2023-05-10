@@ -1,14 +1,16 @@
-package Product;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class ProductInput {
+import Product.InMemoryProductRepository;
+import Product.ProductService;
+
+public class OrderInput {
     private static final Map<String, Integer> cart = new HashMap<>();
 
-    public static void getProductInput() {
+    public static void getOrderInput() {
         Scanner productScanner = new Scanner(System.in);
         ProductService productService = new ProductService(new InMemoryProductRepository());
         List<String> products = productService.getCatalog();
@@ -33,7 +35,7 @@ public class ProductInput {
         System.out.println("Would you like to continue shopping? (Y/N)");
         String continueShopping = productScanner.next();
         if (continueShopping.equals("Y") || continueShopping.equals("y")) {
-            getProductInput();
+            getOrderInput();
             productScanner.close();
             return;
         } else if (continueShopping.equals("N") || continueShopping.equals("n")) {
