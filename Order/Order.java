@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 import Product.InMemoryProductRepository;
+import Product.Product;
 import Product.ProductService;
 
 public class Order {
-    private static final Map<String, Integer> cart = new HashMap<>();
+    private static final Map<Product, Integer> cart = new HashMap<>();
+    static InMemoryProductRepository productRepo = new InMemoryProductRepository();
 
     public static void getOrderInput() {
         Scanner productScanner = new Scanner(System.in);
@@ -19,14 +21,14 @@ public class Order {
         displayProductList(products);
 
         // Ask the user to choose a product
-        String productChoice = getProductChoice(productScanner, products);
+        Product product = getProductChoice(productScanner, products, productRepo);
 
         // Get the category and quantity for the chosen product
-        String category = getCategory(products, productChoice);
+        String category = getCategory(products, product);
         String quantity = getQuantity(productScanner, category);
 
         // Add the chosen product and quantity to the cart
-        addToCart(products, productChoice, quantity);
+        addToCart(products, product, quantity);
 
         // Ask the user if they want to continue shopping
         boolean continueShopping = askToContinueShopping(productScanner);
@@ -40,7 +42,7 @@ public class Order {
             getPaymentMethod(productScanner);
 
             // Display the contents of the cart and thank the user for shopping
-            displayCart(cart);
+            displayCart(cart, productRepo);
             System.out.println("Thank you for shopping with us!");
             System.out.println("Order Delivered");
 
@@ -55,20 +57,23 @@ public class Order {
         }
     }
 
-    private static String getProductChoice(Scanner productScanner, List<String> products) {
+    private static Product getProductChoice(Scanner productScanner, List<String> products,
+            InMemoryProductRepository productRepo) {
         String productChoice = productScanner.next();
         if (Integer.parseInt(productChoice) > products.size()) {
             System.out.println("Invalid choice");
-            return getProductChoice(productScanner, products);
+            return getProductChoice(productScanner, products, productRepo);
 
         }
-        System.out.println("You have chosen: " + products.get(Integer.parseInt(productChoice) - 1).substring(3));
-        return productChoice;
+        String productId = productChoice;
+        System.out.println(productId);
+        Product product = productRepo.findById(productId);
+        System.out.println("You have chosen: " + product.getBrand());
+        return product;
     }
 
-    private static String getCategory(List<String> products, String productChoice) {
-        String[] parts = products.get(Integer.parseInt(productChoice) - 1).split("[()]");
-        String category = parts[1].trim();
+    private static String getCategory(List<String> products, Product product) {
+        String category = product.getCategory();
         System.out.println("Please enter the quantity in " + category + " you would like to purchase:");
         return category;
     }
@@ -79,13 +84,12 @@ public class Order {
         return quantity;
     }
 
-    private static void addToCart(List<String> products, String productChoice, String quantity) {
-        String productName = products.get(Integer.parseInt(productChoice) - 1).substring(3);
-        if (cart.containsKey(productName)) {
-            int currentQuantity = cart.get(productName);
-            cart.put(productName, currentQuantity + Integer.parseInt(quantity));
+    private static void addToCart(List<String> products, Product product, String quantity) {
+        if (cart.containsKey(product)) {
+            int currentQuantity = cart.get(product);
+            cart.put(product, currentQuantity + Integer.parseInt(quantity));
         } else {
-            cart.put(productName, Integer.parseInt(quantity));
+            cart.put(product, Integer.parseInt(quantity));
         }
     }
 
@@ -112,11 +116,16 @@ public class Order {
         }
     }
 
-    private static void displayCart(Map<String, Integer> cart) {
+    private static void displayCart(Map<Product, Integer> cart, InMemoryProductRepository productRepo) {
         System.out.println("Your cart contains:");
-        for (String product : cart.keySet()) {
+        double total = 0.0;
+        for (Product product : cart.keySet()) {
             int productQuantity = cart.get(product);
-            System.out.println(product + " x " + productQuantity);
+            double productPrice = product.getPrice();
+            System.out.println(product.getBrand() + " x " + productQuantity + " at " + productPrice + " each");
+            total += productPrice * productQuantity;
         }
+        System.out.println("Total price: " + total);
     }
+
 }

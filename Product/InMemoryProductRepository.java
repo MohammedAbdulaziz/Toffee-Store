@@ -41,7 +41,17 @@ public class InMemoryProductRepository implements ProductRepository {
     }
 
     // Return the product with the given id
-    public Product findById(String id) {
-        return this.products.get(id);
+    public Product findById(String string) {
+        return this.products.get(string);
+    }
+
+    public Product findByName(String name) {
+        for (Product product : this.products.values()) {
+            if (product.getName().equals(name)) {
+                System.out.println("Found product: " + product.getName());
+                return product;
+            }
+        }
+        return null;
     }
 }

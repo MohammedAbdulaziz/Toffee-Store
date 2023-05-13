@@ -5,5 +5,7 @@ import java.util.List;
 public interface ProductRepository {
     List<String> findAllFormatted();
 
-    Product findById(String name);
+    Product findById(String id);
+
+    Product findByName(String name);
 }

@@ -3,9 +3,9 @@ package Product;
 import java.util.List;
 
 public class ProductService {
-  private ProductRepository productRepository;
+  private InMemoryProductRepository productRepository;
 
-  public ProductService(ProductRepository productRepository) {
+  public ProductService(InMemoryProductRepository productRepository) {
     this.productRepository = productRepository;
   }
 
@@ -15,5 +15,9 @@ public class ProductService {
 
   public Product getProductById(String id) {
     return productRepository.findById(id);
+  }
+
+  public Product getProductByName(String name) {
+    return productRepository.findByName(name);
   }
 }
