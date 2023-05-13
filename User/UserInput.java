@@ -78,17 +78,17 @@ public class UserInput {
         }
     }
 
-    private static void login(Scanner myObj) {
+    private static boolean login(Scanner myObj) {
         // Ask for a username and password
         System.out.print("Enter username: ");
         String username = myObj.next();
         System.out.print("Enter password: ");
         String password = myObj.next();
+        boolean userExists = false;
 
         try {
             File file = new File("users.txt");
             Scanner fileScanner = new Scanner(file);
-            boolean userExists = false;
 
             // Check if the username and password match a registered user
             while (fileScanner.hasNextLine()) {
@@ -102,22 +102,21 @@ public class UserInput {
                     userExists = true;
                     break;
                 } else if ((username.equals(registeredUsername) && !password.equals(registeredPassword))) {
-                    System.out.println("Incorrect username or password.");
-                    login(myObj);
-                    fileScanner.close();
+                    System.out.println("Incorrect username or password. Please try again.");
+                    userExists = login(myObj);
                 }
             }
-
-            // If the username and password don't match a registered user, either prompt to
-            // register or try again
+            // If the username and password don't match a registered user, prompt to
+            // register
             if (!userExists) {
-                System.out.println("User doesn't exist. Please register.");
-                getUserInput();
+                System.out.println("User doesn't exist. Please register a new user.");
+                register(myObj);
             }
             fileScanner.close();
-
+            return userExists;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }
