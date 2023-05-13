@@ -1,9 +1,5 @@
 package User;
 
-import java.util.List;
-
-// import Order.Order;
-
 public class User {
     private String username;
     private String password;
@@ -17,10 +13,6 @@ public class User {
         this.username = username;
         this.password = password;
     }
-
-    // public void placeOrder(Order order) {
-    // // implementation
-    // }
 
     public String getUsername() {
         return username;
