@@ -10,14 +10,16 @@ public class InMemoryProductRepository implements ProductRepository {
 
     public InMemoryProductRepository() {
         this.products = new HashMap<>();
-        // initialize some products
+        initializeProducts();
+    }
+
+    // Initialize some sample products
+    private void initializeProducts() {
         Product product1 = new Product("1", "Candy", "Package",
                 "A sealed package full of different candies including\n hard candy and many other types.", "image1.jpg",
-                "Hershi", 5.0,
-                3.0);
+                "Hershi", 5.0, 3.0);
         Product product2 = new Product("2", "Chocolate", "Kilo", "Solidified Milk Chocolate sold in kilos",
-                "image2.jpg", "Milka", 20.0,
-                5.0);
+                "image2.jpg", "Milka", 20.0, 5.0);
         Product product3 = new Product("3", "Toffee", "Kilo", "Toffee sold in kilos", "image3.jpg", "Toffifay", 30.0,
                 5.0);
         this.products.put("1", product1);
@@ -25,6 +27,7 @@ public class InMemoryProductRepository implements ProductRepository {
         this.products.put("3", product3);
     }
 
+    // Return a list of formatted product strings
     public List<String> findAllFormatted() {
         List<String> formattedProducts = new ArrayList<>();
         int i = 1;
@@ -37,6 +40,7 @@ public class InMemoryProductRepository implements ProductRepository {
         return formattedProducts;
     }
 
+    // Return the product with the given id
     public Product findById(String id) {
         return this.products.get(id);
     }
